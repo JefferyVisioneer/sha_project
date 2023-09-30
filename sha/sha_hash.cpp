@@ -13,7 +13,7 @@ sha_hash::sha_hash() = default;
 uint32_t sha_hash::rightrotate(uint32_t what_to, uint32_t how_much)
 {
 /*
-Функция циклического сдвига вправо числа what_to на how_much позиций.
+a cyclic shift to riht from what_to index to +how_much position.
 */
     return ((what_to >> how_much) | (what_to << (32 - how_much)));
 }
@@ -21,7 +21,7 @@ uint32_t sha_hash::rightrotate(uint32_t what_to, uint32_t how_much)
 uint32_t sha_hash::rightshift(uint32_t what_to, uint32_t how_much)
 {
 /*
-Функция просто сдвига вправо числа what_to на how_much позиций.
+an ordinary shift to right from what_to to how_much positions.
 */
     return what_to >> how_much;
 }
@@ -29,7 +29,7 @@ uint32_t sha_hash::rightshift(uint32_t what_to, uint32_t how_much)
 vector<uint8_t> sha_hash::read_from_string(const string& s)
 {
 /*
-Функция принимает на вход строку, преобразует её в вектор значений типа uint8_t (обычно unsigned char).
+This func gets string, changes it to vector<uint8_t> and returns it.
 */
 
     vector<uint8_t> v{};
@@ -42,9 +42,8 @@ vector<uint8_t> sha_hash::read_from_string(const string& s)
 vector<vector<uint8_t>> sha_hash::divide_into_blocks(vector<uint8_t>& v)
 {
 /*
-Функция получает вектор всех байтов для хеширования (v). Разбивает этот вектор на блоки по 512 битов,
-учитывая особенности дополнения для sha256. После основной информации идёт следующий байт (1000000)2,
-после которого идут нулевые байты вплоть до последних 8 штук, в которые записывается длина хешируемого сообщения.
+Thif func gets vector of all string bytes, divides this vector to blocks by 512 bits. After the main bits, it adds the bite (10000000)2;
+and then zeros follow to the end except the last 8 bytes, in which the length of hash message is written.
 */
     vector<vector<uint8_t>> ans {};
 
@@ -120,7 +119,7 @@ vector<vector<uint8_t>> sha_hash::divide_into_blocks(vector<uint8_t>& v)
 vector<vector<uint32_t>> sha_hash::from_bytes_to_word(vector<vector<uint8_t>>& v)
 {
 /*
-Функция преобразует вектор байтов в вектор слов 32-битной разрядности для дальнейшей работы с алгоритмом sha256.
+This func transform bytes-vector to 32-bit-word-vector to work with it on sha-256 algorithm.
 */
     vector<vector<uint32_t>> ans(v.size());
 
@@ -150,7 +149,7 @@ vector<vector<uint32_t>> sha_hash::from_bytes_to_word(vector<vector<uint8_t>>& v
 vector<uint32_t> sha_hash::create_message_schedule(vector<uint32_t>& v)
 {
 /*
-Функция формирует массив из 64 слов 32-битной разрядности, которые и будут хешироваться sha256.
+This func forms an 64-length 32-bit-word-array. The array will be hashed by sha-256.
 */
     vector<uint32_t> message_schedule(64);
 
@@ -172,8 +171,8 @@ vector<uint32_t> sha_hash::create_message_schedule(vector<uint32_t>& v)
 void sha_hash::update_hash_values(vector<uint32_t>& v, vector<uint32_t>& hash_values)
 {
 /*
-Основная работа происходит тут. Хэш-значения (8 штук) проходят 64-раундовый цикл изменения, в результате которого они либо обновляются,
-либо становятся итоговым хэш-результатом алгоритма, если блок слов (v), для которых эта функция вызывалась, был последним для хэшируемого текста.
+The main work is here. 8 hash-values get 64-round cycle of changes; afther that they update or return as the hash-result of sha-256, 
+if the bytes-block (v) is the last one in a row.
 */
     uint32_t k[64] {0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5, 0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5,
                     0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174,
@@ -223,7 +222,7 @@ void sha_hash::update_hash_values(vector<uint32_t>& v, vector<uint32_t>& hash_va
 vector<uint32_t> sha_hash::create_hash()
 {
 /*
-Функция, которая просто курирует работу всех частей алгоритма. Возвращает итоговые хэш-значения для строки текста.
+An interface function for customers to create a hash. Returns the resulted hash-values.
 */
     vector<uint32_t> hash_values {0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19};
 
@@ -245,6 +244,7 @@ vector<uint32_t> sha_hash::create_hash()
 
 static char bit_4_to_char(uint8_t symbol){
 /*
+This func gets 4 bits of (symbol) to this symbol in hexadecimal.
 Функция преобразует 4 бита (symbol) в символ в шестнадцатеричном представлении.
 */
 
@@ -262,8 +262,8 @@ static char bit_4_to_char(uint8_t symbol){
 static string uint32_t_to_string(const uint32_t& num)
 {
 /*
-Функция принимает число в 32-битном формате. Разбивает это число на 8 пар по 4 бита, подает эти результаты в функцию bit_4_to_char.
-Результатом будет строка, представляющая собой шестнадцатеричный формат числа num.
+This func gets 32-bit num, divides it to a 8 pairs of 4-bit words and gets these pairs to bit_4_to_char func (see above).
+Returns an hexadecimal format of num.
 */
 
     string ans {};
@@ -289,7 +289,7 @@ static string uint32_t_to_string(const uint32_t& num)
 string sha_hash::operator()(const string& s)
 {
 /*
-Оператор вызова функции для класса sha_hash, принимающий исходную строку s, и возвращающий хэщ-значение этой строки (ans).
+Reloaded func-call operator of sha_hash class to provide an organic interface for customers to get a string straight from the func-call of this object.
 */
     message = read_from_string(s);
 

@@ -6,11 +6,10 @@
 #include <vector>
 
 /*
-Необходимые константы для работы:
-Т.к. алгоритм 256-битовый, то длина одного блока данных 512 бит.
-Максимально байтов в блоке 64 штуки, а максимально минимально вместить можно 55 байтов.
-Если вместить 56 байт, то не хватит места для 8 байтов с длиной сообщения, поэтому
-для sha256 потребуется второй блок информации.
+All needed constants for the algorithm:
+It's the 256-bit algorithm, thus the length of one block is 512 bit.
+We have 64 bytes in block at maximum, but we can put only 55 in the last block at maximum.
+If we put 56 byte, then we won't have a place to put the 8-byte message length, thus we'd need another one block.
 */
 
 const uint32_t block_length {512};
@@ -18,8 +17,8 @@ const uint32_t min_bytes_in_block {55};
 const uint32_t max_bytes_in_block {64};
 
 /*
-Класс хэша, который инкапсулирует информацию об алгоритме.
-Имеет стандартный конструктор по умолчанию и оператор вызова функции, принимающий исходную строку в качестве аргумента.
+Hash class, that incapsulates all related to algorithm info in it.
+The class has default constructor and reloaded func-call operator, which gets string to hash it. 
 */
 
 class sha_hash{
